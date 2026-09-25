@@ -1,16 +1,40 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 const Arrow = () => (
-  <svg viewBox="0 0 24 24">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M5 12h13M13 6l6 6-6 6" />
   </svg>
 );
 
 const Star = () => (
-  <svg viewBox="0 0 24 24">
-    <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 8.7l6.2-.9L12 3Z" />
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 3.8l2.55 5.17 5.71.83-4.13 4.03.98 5.69L12 16.83 6.89 19.52l.98-5.69-4.13-4.03.98-5.69 5.71-.83L12 3.8z" />
   </svg>
 );
+
+const treatments = [
+  {
+    number: "01",
+    title: "General Dentistry",
+    text: "Thoughtful everyday dental care focused on prevention, comfort and long-term oral health.",
+  },
+  {
+    number: "02",
+    title: "Root Canal Care",
+    text: "Carefully planned treatment designed to protect your natural tooth and make the experience easier.",
+  },
+  {
+    number: "03",
+    title: "Smile Enhancement",
+    text: "Cosmetic treatments designed around a natural-looking and confident smile.",
+  },
+  {
+    number: "04",
+    title: "Preventive Care",
+    text: "Regular examinations and professional cleaning to help maintain your oral health.",
+  },
+];
 
 function App() {
   const [modal, setModal] = useState(false);
@@ -33,856 +57,543 @@ function App() {
   };
 
   useEffect(() => {
-    const items = document.querySelectorAll(".reveal");
+    const revealItems = document.querySelectorAll(".reveal");
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.12 }
     );
 
-    items.forEach((item) => observer.observe(item));
+    revealItems.forEach((item) => observer.observe(item));
 
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const esc = (e) => {
+    const handleEscape = (e) => {
       if (e.key === "Escape") closeModal();
     };
 
-    window.addEventListener("keydown", esc);
+    window.addEventListener("keydown", handleEscape);
 
     return () => {
-      window.removeEventListener("keydown", esc);
-      document.body.classList.remove("modal-open");
+      observer.disconnect();
+      window.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
   return (
     <div className="site">
 
-      {/* FLOATING ELEMENTS */}
-      <div className="floating-orb orb-one" />
-      <div className="floating-orb orb-two" />
-      <div className="floating-orb orb-three" />
-
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       <header className="navbar">
-
         <a href="#home" className="brand">
-          <div className="brand-mark">✦</div>
-
-          <div className="brand-name">
-            DENTAL
-            <br />
-            CARE
-          </div>
+          <span className="brand-mark">✦</span>
+          <span>DENTAL CARE</span>
         </a>
 
         <nav>
           <a href="#home">Home</a>
           <a href="#treatments">Treatments</a>
           <a href="#about">About</a>
-          <a href="#support">Contact</a>
+          <a href="#contact">Contact</a>
         </nav>
 
-        <button
-          className="nav-appointment"
-          onClick={openModal}
-          type="button"
-        >
-          Book Appointment
-          <span>
-            <Arrow />
-          </span>
+        <button className="nav-appointment" onClick={openModal}>
+          <span>Book Appointment</span>
+          <Arrow />
         </button>
-
       </header>
 
+      <main>
 
-      {/* ================= HERO ================= */}
-      <section className="hero" id="home">
+        {/* HERO */}
+        <section className="hero" id="home">
+          <div className="hero-image" />
+          <div className="hero-overlay" />
 
-        <div className="hero-image" />
-        <div className="hero-overlay" />
+          <div className="hero-glow hero-glow-one" />
+          <div className="hero-glow hero-glow-two" />
 
-        <div className="hero-glow glow-left" />
-        <div className="hero-glow glow-right" />
-
-        <div className="hero-content">
-
-          <div className="eyebrow reveal">
-            <span />
-            A NEW STANDARD OF DENTAL CARE
+          {/* Floating glass objects */}
+          <div className="hero-floating hero-floating-one">
+            <span className="floating-symbol">✦</span>
+            <div>
+              <small>CARE</small>
+              <strong>Comfort first</strong>
+            </div>
           </div>
 
-          <h1 className="reveal delay-1">
-            Trusted Dental Care
-            <br />
-            <em>for Every Generation.</em>
-          </h1>
+          <div className="hero-floating hero-floating-two">
+            <span className="floating-number">01</span>
+            <div>
+              <small>APPROACH</small>
+              <strong>Patient-first</strong>
+            </div>
+          </div>
 
-          <p className="hero-copy reveal delay-2">
-            Modern dental care designed around comfort,
-            clarity and a healthier, more confident smile.
-          </p>
+          <div className="hero-content reveal">
+            <p className="eyebrow">A NEW STANDARD OF DENTAL CARE</p>
 
-          <div className="hero-actions reveal delay-3">
+            <h1>
+              Trusted dental care
+              <span>for every generation.</span>
+            </h1>
 
-            <button
-              className="primary-btn"
-              type="button"
-              onClick={openModal}
-            >
-              Book Appointment
+            <p className="hero-description">
+              Modern dentistry with a calmer, more thoughtful approach —
+              designed around your comfort and long-term smile health.
+            </p>
 
-              <span>
+            <div className="hero-actions">
+              <button className="primary-button" onClick={openModal}>
+                <span>Book Appointment</span>
+
+                <span className="button-circle">
+                  <Arrow />
+                </span>
+              </button>
+
+              <a href="#treatments" className="text-button">
+                Explore treatments
                 <Arrow />
-              </span>
-            </button>
-
-            <a href="#treatments" className="text-btn">
-              Explore Treatments
-              <span>→</span>
-            </a>
-
+              </a>
+            </div>
           </div>
 
-        </div>
+          <div className="hero-bottom reveal">
+            <div className="hero-bottom-item">
+              <span>01</span>
+              <p>Personalized care</p>
+            </div>
 
+            <div className="hero-bottom-item">
+              <span>02</span>
+              <p>Modern technology</p>
+            </div>
 
-        {/* SUBTLE FLOATING GLASS */}
-        <div className="floating-note">
-          <div className="note-icon">✦</div>
-
-          <div>
-            <strong>Care, reimagined.</strong>
-            <small>Comfort in every detail</small>
-          </div>
-        </div>
-
-
-        {/* HERO BOTTOM */}
-        <div className="hero-trust">
-
-          <div>
-            <strong>01</strong>
-            <span>
-              PERSONALIZED
-              <br />
-              CARE
-            </span>
+            <div className="hero-bottom-item">
+              <span>03</span>
+              <p>Patient-first experience</p>
+            </div>
           </div>
 
-          <div>
-            <strong>02</strong>
-            <span>
-              MODERN
-              <br />
-              TECHNOLOGY
-            </span>
-          </div>
-
-          <div>
-            <strong>03</strong>
-            <span>
-              PATIENT-FIRST
-              <br />
-              EXPERIENCE
-            </span>
-          </div>
-
-        </div>
-
-        <div className="scroll-indicator">
-          <span />
-          SCROLL TO EXPLORE
-        </div>
-
-      </section>
-
-
-      {/* ================= INTRO ================= */}
-      <section className="intro-section">
-
-        <div className="section-container intro-grid">
-
-          <div className="section-label reveal">
+          <div className="scroll-label">
             <span />
-            WHY CHOOSE US
+            Scroll to explore
+          </div>
+        </section>
+
+        {/* INTRO */}
+        <section className="intro section-pad">
+          <div className="section-kicker reveal">
+            THE DIFFERENCE
           </div>
 
-          <div>
-
+          <div className="intro-grid">
             <h2 className="reveal">
-              Dentistry should
-              <br />
-              feel <em>different.</em>
+              Dentistry should feel
+              <em>different.</em>
             </h2>
 
-            <p className="large-copy reveal delay-1">
-              From your first consultation to ongoing care,
-              every detail is designed to make your dental
-              experience comfortable, simple and personal.
-            </p>
+            <div className="intro-copy reveal">
+              <p>
+                A dental visit should not feel rushed or intimidating.
+                Every part of the experience should feel considered —
+                from the first conversation to the treatment itself.
+              </p>
 
-            <div className="mini-points">
-
-              <div className="reveal delay-1">
-                <span>✦</span>
-                <p>Personalised consultations</p>
-              </div>
-
-              <div className="reveal delay-2">
-                <span>✦</span>
-                <p>Modern treatment approach</p>
-              </div>
-
-              <div className="reveal delay-3">
-                <span>✦</span>
-                <p>Comfort-focused experience</p>
-              </div>
-
+              <a href="#about" className="inline-link">
+                Discover our approach
+                <Arrow />
+              </a>
             </div>
-
           </div>
+        </section>
 
-        </div>
+        {/* TREATMENTS */}
+        <section className="treatments section-pad" id="treatments">
 
-      </section>
-
-
-      {/* ================= TREATMENTS ================= */}
-      <section
-        className="treatments-section"
-        id="treatments"
-      >
-
-        <div className="section-container">
-
-          <div className="section-heading">
-
+          <div className="section-heading reveal">
             <div>
-
-              <div className="section-label reveal">
-                <span />
-                TREATMENTS
+              <div className="section-kicker">
+                WHAT WE OFFER
               </div>
 
-              <h2 className="reveal">
-                Care for every
+              <h2>
+                Care built around
                 <br />
-                <em>smile.</em>
+                your smile.
               </h2>
-
             </div>
 
-            <p className="reveal delay-1">
-              Thoughtfully designed dental treatments
-              focused on comfort, precision and long-term
-              oral health.
+            <p>
+              From everyday preventive care to focused treatments,
+              every service begins with understanding what you need.
+            </p>
+          </div>
+
+          <div className="treatment-layout">
+
+            <div className="treatment-feature reveal">
+              <div className="treatment-feature-image" />
+              <div className="treatment-feature-overlay" />
+
+              <div className="feature-floating">
+                <span>✦</span>
+                <div>
+                  <small>SMILE CARE</small>
+                  <strong>Thoughtful by design</strong>
+                </div>
+              </div>
+
+              <div className="feature-content">
+                <span>01 / CORE CARE</span>
+
+                <h3>
+                  Healthy teeth.
+                  <br />
+                  Confident smile.
+                </h3>
+
+                <p>
+                  A modern approach to everyday dental health,
+                  focused on prevention and lasting care.
+                </p>
+              </div>
+            </div>
+
+            <div className="treatment-list">
+              {treatments.map((item) => (
+                <article
+                  className="treatment-row reveal"
+                  key={item.number}
+                >
+                  <span className="treatment-number">
+                    {item.number}
+                  </span>
+
+                  <div className="treatment-info">
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                  </div>
+
+                  <span className="treatment-arrow">
+                    <Arrow />
+                  </span>
+                </article>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+        {/* ABOUT */}
+        <section className="about section-pad" id="about">
+
+          <div className="about-visual reveal">
+            <div className="about-image" />
+
+            <div className="about-glass">
+              <span>THE EXPERIENCE</span>
+              <strong>Calm. Clear. Considered.</strong>
+            </div>
+
+            <div className="about-orb" />
+          </div>
+
+          <div className="about-content reveal">
+
+            <div className="section-kicker">
+              OUR APPROACH
+            </div>
+
+            <h2>
+              Modern care.
+              <br />
+              <em>Human touch.</em>
+            </h2>
+
+            <p className="about-lead">
+              Good dentistry is about more than treating a tooth.
+              It is about creating an experience where patients feel
+              informed, comfortable and cared for.
             </p>
 
-          </div>
+            <div className="about-points">
 
-
-          <div className="treatment-grid">
-
-            <article className="treatment-card reveal">
-
-              <span className="treatment-number">
-                01
-              </span>
-
-              <div className="treatment-icon">
-                ✦
+              <div>
+                <span>01</span>
+                <p>
+                  Clear explanations before every treatment.
+                </p>
               </div>
 
-              <h3>General Dentistry</h3>
-
-              <p>
-                Everyday dental care to help maintain
-                healthy teeth and gums.
-              </p>
-
-              <a href="#support">
-                Explore
-                <span>
-                  <Arrow />
-                </span>
-              </a>
-
-            </article>
-
-
-            <article className="treatment-card reveal delay-1">
-
-              <span className="treatment-number">
-                02
-              </span>
-
-              <div className="treatment-icon">
-                ◇
+              <div>
+                <span>02</span>
+                <p>
+                  A calm environment designed around comfort.
+                </p>
               </div>
 
-              <h3>Root Canal Care</h3>
-
-              <p>
-                Careful treatment focused on preserving
-                your natural tooth.
-              </p>
-
-              <a href="#support">
-                Explore
-                <span>
-                  <Arrow />
-                </span>
-              </a>
-
-            </article>
-
-
-            <article className="treatment-card reveal delay-2">
-
-              <span className="treatment-number">
-                03
-              </span>
-
-              <div className="treatment-icon">
-                ◌
+              <div>
+                <span>03</span>
+                <p>
+                  Technology used where it genuinely improves care.
+                </p>
               </div>
 
-              <h3>Smile Enhancement</h3>
-
-              <p>
-                Modern cosmetic options for a natural,
-                confident smile.
-              </p>
-
-              <a href="#support">
-                Explore
-                <span>
-                  <Arrow />
-                </span>
-              </a>
-
-            </article>
-
-
-            <article className="treatment-card reveal delay-3">
-
-              <span className="treatment-number">
-                04
-              </span>
-
-              <div className="treatment-icon">
-                ✧
-              </div>
-
-              <h3>Preventive Care</h3>
-
-              <p>
-                Regular care and guidance for better
-                long-term oral health.
-              </p>
-
-              <a href="#support">
-                Explore
-                <span>
-                  <Arrow />
-                </span>
-              </a>
-
-            </article>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      {/* ================= ABOUT ================= */}
-      <section className="about-section" id="about">
-
-        <div className="about-image">
-
-          <div className="image-badge">
-
-            <span>✦</span>
-
-            <div>
-              <strong>Thoughtful care.</strong>
-              <small>Designed around you</small>
             </div>
 
           </div>
+        </section>
 
-        </div>
+        {/* TRUST */}
+        <section className="trust section-pad">
 
-
-        <div className="about-content">
-
-          <div className="section-label reveal">
-            <span />
-            OUR APPROACH
-          </div>
-
-          <h2 className="reveal">
-            Modern care.
-            <br />
-            <em>Human touch.</em>
-          </h2>
-
-          <p className="reveal delay-1">
-            Great dentistry is about more than treatment.
-            It is about creating an environment where
-            patients feel informed, comfortable and cared
-            for at every stage.
-          </p>
-
-          <button
-            className="outline-btn reveal delay-2"
-            type="button"
-            onClick={openModal}
-          >
-            Start a conversation
-            <span>
-              <Arrow />
-            </span>
-          </button>
-
-        </div>
-
-      </section>
-
-
-      {/* ================= TRUST ================= */}
-      <section className="trust-section">
-
-        <div className="section-container">
-
-          <div className="trust-top">
+          <div className="trust-top reveal">
 
             <div>
-
-              <div className="section-label reveal">
-                <span />
-                PATIENT EXPERIENCE
+              <div className="section-kicker">
+                WHY IT MATTERS
               </div>
 
-              <h2 className="reveal">
+              <h2>
                 Built around
                 <br />
                 <em>trust.</em>
               </h2>
-
             </div>
 
-
-            <div className="rating reveal">
+            <div className="trust-intro">
 
               <div className="stars">
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-                <Star />
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star key={star} />
+                ))}
               </div>
 
-              <span>
-                Patient-focused experience
-              </span>
+              <p>
+                A better dental experience starts with listening,
+                explaining clearly and putting patient comfort first.
+              </p>
 
             </div>
 
           </div>
 
-
-          <div className="trust-cards">
+          <div className="trust-grid">
 
             <article className="trust-card reveal">
-
-              <div className="trust-icon">
-                ✦
-              </div>
-
-              <h3>Clear consultations</h3>
-
+              <span>01</span>
+              <div className="trust-icon">↗</div>
+              <h3>Clear communication</h3>
               <p>
-                Straightforward communication so patients
-                understand their treatment options.
+                Understand your treatment, your options and
+                what happens next.
               </p>
-
             </article>
 
-
-            <article className="trust-card reveal delay-1">
-
-              <div className="trust-icon">
-                ◇
-              </div>
-
+            <article className="trust-card reveal">
+              <span>02</span>
+              <div className="trust-icon">◌</div>
               <h3>Comfort first</h3>
-
               <p>
-                A calm approach designed to make every
-                visit feel more relaxed.
+                A calmer experience from consultation
+                through treatment.
               </p>
-
             </article>
 
-
-            <article className="trust-card reveal delay-2">
-
-              <div className="trust-icon">
-                ✧
-              </div>
-
-              <h3>Modern approach</h3>
-
+            <article className="trust-card reveal">
+              <span>03</span>
+              <div className="trust-icon">✦</div>
+              <h3>Thoughtful technology</h3>
               <p>
-                Thoughtful treatment planning supported by
-                contemporary dental techniques.
+                Modern tools used to support precision
+                and better care.
               </p>
-
             </article>
 
           </div>
+        </section>
 
-        </div>
+        {/* FINAL CTA */}
+        <section className="final-cta" id="contact">
 
-      </section>
+          <div className="final-ambient" />
 
+          <div className="final-glow final-glow-one" />
+          <div className="final-glow final-glow-two" />
 
-      {/* ================= CTA ================= */}
-      <section className="cta-section">
+          <div className="final-ring final-ring-one" />
+          <div className="final-ring final-ring-two" />
 
-        <div className="cta-glow" />
-
-        <div className="cta-content">
-
-          <div className="section-label reveal">
-            <span />
-            YOUR NEXT VISIT
-            <span />
+          <div className="floating-object floating-object-one">
+            <span>✦</span>
+            <strong>Comfort first</strong>
           </div>
 
-          <h2 className="reveal">
-            Your smile deserves
-            <br />
-            <em>thoughtful care.</em>
-          </h2>
+          <div className="floating-object floating-object-two">
+            <span>01</span>
+            <strong>Personal care</strong>
+          </div>
 
-          <p className="reveal delay-1">
-            Take the first step towards a more comfortable
-            and confident dental experience.
-          </p>
+          <div className="floating-object floating-object-three">
+            <span className="mini-dot" />
+            <strong>Modern dentistry</strong>
+          </div>
 
-          <button
-            className="primary-btn light reveal delay-2"
-            type="button"
-            onClick={openModal}
-          >
-            Book Appointment
+          <div className="final-center-orb">
+            <div className="orb-inner">
+              <span>✦</span>
+            </div>
+          </div>
 
-            <span>
-              <Arrow />
-            </span>
-          </button>
+          <div className="final-cta-content reveal">
 
-        </div>
-
-      </section>
-
-
-      {/* ================= SUPPORT ================= */}
-      <section
-        className="support-section"
-        id="support"
-      >
-
-        <div className="support-inner">
-
-          <div className="support-heading">
-
-            <div className="section-label reveal">
-              <span />
-              SUPPORT & CONTACT
+            <div className="section-kicker">
+              YOUR NEXT VISIT
             </div>
 
-            <h2 className="reveal">
-              Here when you
-              <br />
-              <em>need us.</em>
+            <h2>
+              Your smile deserves
+              <em>thoughtful care.</em>
             </h2>
 
-            <p className="reveal delay-1">
-              Have a question, need help choosing a treatment,
-              or ready to plan your visit? Choose the option
-              that works best for you.
+            <p>
+              Ready to take the next step?
+              Start with a simple conversation about your dental care.
+            </p>
+
+            <button
+              className="primary-button"
+              onClick={openModal}
+            >
+              <span>Book Appointment</span>
+
+              <span className="button-circle">
+                <Arrow />
+              </span>
+            </button>
+
+          </div>
+        </section>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="footer">
+
+        <div className="footer-top">
+
+          <div className="footer-brand">
+
+            <a href="#home" className="brand">
+              <span className="brand-mark">✦</span>
+              <span>DENTAL CARE</span>
+            </a>
+
+            <p>
+              Modern dentistry with a more thoughtful,
+              human approach.
             </p>
 
           </div>
 
-
-          <div className="support-grid">
-
-            {/* BOOK */}
-            <button
-              className="support-card reveal"
-              type="button"
-              onClick={openModal}
-            >
-
-              <div className="support-card-top">
-
-                <div className="support-icon">
-                  ✦
-                </div>
-
-                <span className="support-number">
-                  01
-                </span>
-
-              </div>
-
-              <span className="support-small">
-                BOOK A VISIT
-              </span>
-
-              <h3>
-                Schedule an
-                <br />
-                appointment.
-              </h3>
-
-              <p>
-                Choose a convenient time to begin
-                your dental care journey.
-              </p>
-
-              <span className="support-arrow">
-                <Arrow />
-              </span>
-
-            </button>
-
-
-            {/* CONTACT */}
-            <a
-              href="mailto:"
-              className="support-card reveal delay-1"
-            >
-
-              <div className="support-card-top">
-
-                <div className="support-icon">
-                  ↗
-                </div>
-
-                <span className="support-number">
-                  02
-                </span>
-
-              </div>
-
-              <span className="support-small">
-                CONTACT
-              </span>
-
-              <h3>
-                Talk to
-                <br />
-                our team.
-              </h3>
-
-              <p>
-                Get answers about appointments,
-                treatments and your next visit.
-              </p>
-
-              <span className="support-arrow">
-                <Arrow />
-              </span>
-
-            </a>
-
-
-            {/* HELP */}
-            <a
-              href="#treatments"
-              className="support-card reveal delay-2"
-            >
-
-              <div className="support-card-top">
-
-                <div className="support-icon">
-                  ?
-                </div>
-
-                <span className="support-number">
-                  03
-                </span>
-
-              </div>
-
-              <span className="support-small">
-                SUPPORT
-              </span>
-
-              <h3>
-                Need some
-                <br />
-                guidance?
-              </h3>
-
-              <p>
-                Explore treatments and find the
-                care that fits your needs.
-              </p>
-
-              <span className="support-arrow">
-                <Arrow />
-              </span>
-
-            </a>
-
-          </div>
-
-
-          {/* BOTTOM INFO */}
-          <div className="support-bottom reveal">
+          <div className="footer-links">
 
             <div>
-              <span>AVAILABILITY</span>
-              <strong>Appointments available</strong>
+              <span>EXPLORE</span>
+              <a href="#home">Home</a>
+              <a href="#treatments">Treatments</a>
+              <a href="#about">About</a>
             </div>
 
             <div>
-              <span>EXPERIENCE</span>
-              <strong>Patient-first care</strong>
-            </div>
+              <span>VISIT</span>
+              <a href="#contact">Contact</a>
 
-            <div>
-              <span>APPROACH</span>
-              <strong>Comfort & clarity</strong>
-            </div>
-
-            <div className="support-scroll">
-              <span>BACK TO TOP ↑</span>
+              <button onClick={openModal}>
+                Book Appointment
+              </button>
             </div>
 
           </div>
-
-
-          <footer className="footer">
-
-            <span>
-              © 2026 Dental Care
-            </span>
-
-            <span>
-              Modern dental care experience
-            </span>
-
-          </footer>
 
         </div>
 
+        <div className="footer-bottom">
+          <span>© 2026 Dental Care</span>
+          <span>
+            Thoughtful dentistry, beautifully delivered.
+          </span>
+        </div>
 
-        <div className="support-orb support-orb-one" />
-        <div className="support-orb support-orb-two" />
-        <div className="support-orb support-orb-three" />
+      </footer>
 
-      </section>
-
-
-      {/* ================= APPOINTMENT MODAL ================= */}
+      {/* APPOINTMENT MODAL */}
       {modal && (
-
         <div
           className="modal-backdrop"
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) {
-              closeModal();
-            }
-          }}
+          onMouseDown={closeModal}
         >
-
-          <div className="appointment-modal">
+          <div
+            className="appointment-modal"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
 
             <button
               className="modal-close"
-              type="button"
               onClick={closeModal}
             >
               ×
             </button>
 
-
             {!success ? (
-
               <>
-                <div className="modal-top">
+                <div className="modal-heading">
 
-                  <div className="modal-eyebrow">
-                    <span />
-                    BOOK A VISIT
+                  <div className="section-kicker">
+                    APPOINTMENT
                   </div>
 
                   <h2>
-                    Let's plan your
-                    <br />
-                    <em>next visit.</em>
+                    Let's plan your visit.
                   </h2>
 
                   <p>
-                    Tell us a little about your visit and
-                    your preferred appointment time.
+                    Tell us a little about your preferred appointment.
                   </p>
 
                 </div>
 
-
                 <form onSubmit={submitForm}>
 
-                  <div className="form-row">
+                  <label>
+                    Name
+                    <input
+                      type="text"
+                      placeholder="Your name"
+                      required
+                    />
+                  </label>
 
-                    <label>
-                      Your name
+                  <label>
+                    Phone
+                    <input
+                      type="tel"
+                      placeholder="Your phone number"
+                      required
+                    />
+                  </label>
 
-                      <input
-                        type="text"
-                        placeholder="Enter your name"
-                        required
-                      />
-                    </label>
-
-                    <label>
-                      Phone number
-
-                      <input
-                        type="tel"
-                        placeholder="Enter phone number"
-                        required
-                      />
-                    </label>
-
-                  </div>
-
-
-                  <div className="form-row">
+                  <div className="form-two">
 
                     <label>
                       Preferred date
-
                       <input
                         type="date"
                         required
@@ -891,107 +602,72 @@ function App() {
 
                     <label>
                       Treatment
-
-                      <select
-                        defaultValue=""
-                        required
-                      >
+                      <select defaultValue="" required>
                         <option value="" disabled>
-                          Select treatment
+                          Select
                         </option>
-
                         <option>
                           General Dentistry
                         </option>
-
                         <option>
                           Root Canal Care
                         </option>
-
                         <option>
                           Smile Enhancement
                         </option>
-
                         <option>
                           Preventive Care
                         </option>
-
-                        <option>
-                          Consultation
-                        </option>
-
                       </select>
-
                     </label>
 
                   </div>
 
-
                   <button
-                    className="submit-btn"
+                    className="modal-submit"
                     type="submit"
                   >
                     Request Appointment
-
-                    <span>
-                      <Arrow />
-                    </span>
+                    <Arrow />
                   </button>
 
-                  <p className="form-note">
-                    Demo booking form — no information is
-                    sent anywhere yet.
-                  </p>
-
                 </form>
+
+                <small>
+                  Demo booking form — no information is sent anywhere yet.
+                </small>
               </>
-
             ) : (
-
               <div className="success-state">
 
                 <div className="success-icon">
                   ✓
                 </div>
 
-                <div className="modal-eyebrow">
-                  <span />
+                <div className="section-kicker">
                   REQUEST RECEIVED
-                  <span />
                 </div>
 
-                <h2>
-                  You're all
-                  <br />
-                  <em>set.</em>
-                </h2>
+                <h2>Thank you.</h2>
 
                 <p>
-                  Your appointment request has been received
-                  in this demo. This can later be connected
-                  to the clinic's actual booking system.
+                  Your appointment request has been recorded
+                  in this demo.
                 </p>
 
                 <button
-                  className="submit-btn"
-                  type="button"
+                  className="modal-submit"
                   onClick={closeModal}
                 >
-                  Back to website
-
-                  <span>
-                    <Arrow />
-                  </span>
+                  Close
+                  <Arrow />
                 </button>
 
               </div>
-
             )}
 
           </div>
-
         </div>
-
       )}
 
     </div>
